@@ -140,7 +140,6 @@ public class BSTalgorithm {
     public ArrayList drawNumbers(int numberForGenerator, int min, int max) {
         ArrayList<Integer> array = new ArrayList();
 
-
         int i = 0;
         while (i < numberForGenerator) {
             int tmp = ThreadLocalRandom.current().nextInt(min, max + 1);
@@ -151,16 +150,11 @@ public class BSTalgorithm {
             }
         }
 
-//        for (int i = 0; i < ; i++) {
-//
-//
-//        }
-
         return array;
     }
 
     public int findNodeOfValue(Node n,int value) {
-        // gdy nie ma wartości, zwrazacamy -1:
+        // gdy nie ma wartości, zwracamy -1:
         if (n == null) {
             return -1;
         }
@@ -287,6 +281,78 @@ public class BSTalgorithm {
         printTreeRec(node, spaces);
     }
 
+    // https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/
+    // https://www.java2novice.com/java-interview-programs/delete-node-binary-search-tree-bst/
+    public Node deleteNodeRec(Node root, int value) {
+        // jeśli węzeł jest nullem, to kończymy:
+        if (root == null) {
+            return root;
+        }
+
+        // wywołujemy rekurencyjnie lewą gałąź:
+        if (value < root.value) {
+            root.left = deleteNodeRec(root.left, value);
+        }
+        // wywołujemy rekurencyjnie prawą gałąź:
+        else if (value > root.value) {
+            root.right = deleteNodeRec(root.right, value);
+        }
+        // gdy znaleziono element do usunięcia:
+        else {
+            // sprawdzamy czy węzeł ma jakichś potomków:
+            // jeśli nie ma żadnego potomka, to usuwamy:
+            if(root.left == null && root.right == null) {
+                return null;
+            }
+            // jesli istnieje tylko prawy potomek:
+            else if(root.left == null) {
+                // korzeniowi przypisujemy wartość z prawego potomka, a potomka usuwamy:
+                return root.right;
+            }
+            // jesli istnieje tylko lewy potomek:
+            else if(root.right == null) {
+                // korzeniowi przypisujemy wartość z lewego potomka, a potomka usuwamy:
+                return root.left;
+            }
+            // jesli istnieją dwaj potomkowie:
+            else {
+                // szukamy w prawej gałęzi potomka o najmniejszej wartości:
+                Integer minValue = minValue(root.right);
+                // przypisujemy jego wartość do naszego korzenia:
+                root.setValue(minValue);
+                // ... i usuwamy potomka z prawej gałęzi:
+                root.right = deleteNodeRec(root.right, root.value);
+            }
+        }
+
+        return root;
+    }
+
+    private int minValue(Node root) {
+        int min = root.value;
+
+        // przeszukujemy prawą gałąź:
+        while (root.left != null) {
+            min = root.left.value;
+            root = root.left;
+        }
+
+        return min;
+    }
+
+    public void deleteNode(int value) {
+        node = deleteNodeRec(node, value);
+    }
+
+    public void deleteNodes(ArrayList<Integer> tab) {
+        System.out.println("Usunięto z drzewa: ");
+        // usuwamy wylosowane wartości w kolejności dodawania ich do tablicy:
+        for (int i = 0; i < file.getNumberOfElementsToDelte(); i++) {
+            System.out.println(this.findNode(tab.get(i)));
+            this.deleteNode(tab.get(i));
+        }
+    }
+
     //==================================================================================================================
     private File readFile(String file_name) throws IOException {
         FileInputStream inputStream = null;
@@ -373,5 +439,13 @@ public class BSTalgorithm {
 
         System.out.println("\n\n\n");
         tree.printTree();
+
+        System.out.println("\n\n\n");
+        tree.deleteNodes(tab);
+
+        System.out.println("\n\n\n");
+        tree.printTree();
+
+
     }
 }
