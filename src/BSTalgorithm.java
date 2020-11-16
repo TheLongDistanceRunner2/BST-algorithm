@@ -223,45 +223,62 @@ public class BSTalgorithm {
         return findMaxValueRec(node, x);
     }
 
+    //https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/
     public void printTreeRec(Node n, int spaces) {
+        // jeśli węzeł jest nullem, to kończymy:
         if (n == null) {
             return;
         }
 
+        // dodajemy ilość spacji:
         spaces += 10;
 
+        // wywołujemy rekurencyjnie prawą gałąź:
         printTreeRec(n.right, spaces);
 
+        // wyświetlamy odpowiednią ilość spacji linię poniżej, w miarę "oddalania się" od korzenia:
         System.out.println("\n");
         for (int i = 0; i < spaces; i++) {
             System.out.print(" ");
         }
 
+        // wyświetlamy wartość węzła:
         System.out.print(n.getValue());
 
         boolean flag = true;
         boolean flag2 = true;
 
+        // jeśli jest lewy potomek:
         if(n.left != null) {
+            // przestawiamy pierwszą flagę:
             flag = false;
 
+            // jesli jest prawy potomek:
             if(n.right != null) {
+                // wyświetlamy znak '<', świadczący o dwóch potomkach:
                 System.out.print("<");
+                // przestawiamy drugą flagę:
                 flag2 = false;
             }
+            // jeśli nie ma prawego potomka:
             else {
+                // wyświetlamy znak '\', świaeczący o istnieniu tylko lewego potomka:
                 System.out.print("\\");
             }
         }
 
+        // jeśli prawy potomek istnieje i dwie flagi mają wartość True:
         if(n.right != null && flag && flag2) {
+            // wyświetlamy znak '/', świadczący o istnieniu tylko prawego potomka
             System.out.print("/");
         }
 
+        // wyświetlamy odpowienią ilość spacji w miarę "oddalania się" od korzenia:
         for (int i = 0; i < spaces; i++) {
             System.out.print(" ");
         }
 
+        // wywołujemy rekurencyjnie lewą gałąź:
         printTreeRec(n.left, spaces);
     }
 
