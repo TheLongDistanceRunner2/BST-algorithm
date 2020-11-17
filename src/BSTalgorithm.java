@@ -397,31 +397,73 @@ public class BSTalgorithm {
         return findParentRec(node, value, -1);
     }
 
-    public void rotateRight(int value) {
+    // https://eduinf.waw.pl/inf/alg/001_search/0116.php
+    // https://cs.lmu.edu/~ray/notes/binarysearchtrees/
+    public void rotateR(int value) {
+        // znajdujemy węzeł z oczedkiwaną wartością:
         Node A = findNodeToRotate(node, value);
+        // znajdujemy rodzica węzła A:
+        Node parentA = findParent(A.value);
 
-        // jeśli żądany węzeł znajduje się w drzewie:
-        if (A.value != -1) {
-            Node oldLeft = A.left;
-
-            // jeśli B jest null, to kończymy:
-            if (oldLeft != null) {
-                A.setLeft(oldLeft.getRight());
-                Node parentOfA = findParent(A.value);
-
-                if (parentOfA == null) {
-                    node = oldLeft;
-                }
-                else if (parentOfA.getLeft() == A) {
-                    parentOfA.setLeft(oldLeft);
-                }
-                else {
-                    parentOfA.setRight(oldLeft);
-                }
-                oldLeft.setRight(A);
-            }
+        // jesli A nie ma lewego syna, to przerywamy, bo nie można dokonać rotacji:
+        if (A.left == null) {
+            System.out.println("nie można wykonać rotacji!");
+            return;
         }
+
+        // B to lewe dziecko węzła A:
+        Node B = A.left;
+        // lewym dzieckiem A staje się prawe dziecko B:
+        A.setLeft(B.right); // K04
+
+        //K06:
+
+        // K09:
+        // jeśli węzeł A był korzeniem:
+        if (parentA == null) {
+            // to korzeniem staje się B:
+            node = B;
+            //A = B;
+        }
+        // jeśli A było lewym potomkiem swojego rodzica:
+        else if (parentA.left == A) {
+            // to w jego miejsce ląduje B:
+            parentA.setLeft(B);
+        }
+        else {
+            // w przeciwnym razie, w miejsce prawego potomka węzła A ląduje B:
+            parentA.setRight(B);
+        }
+        // prawym dzieckiem B staje się A:
+        B.setRight(A);
     }
+
+
+//    public void rotateRight(int value) {
+//        Node A = findNodeToRotate(node, value);
+//
+//        // jeśli żądany węzeł znajduje się w drzewie:
+//        if (A.value != -1) {
+//            Node oldLeft = A.left;
+//
+//            // jeśli B jest null, to kończymy:
+//            if (oldLeft != null) {
+//                A.setLeft(oldLeft.getRight());
+//                Node parentOfA = findParent(A.value);
+//
+//                if (parentOfA == null) {
+//                    node = oldLeft;
+//                }
+//                else if (parentOfA.getLeft() == A) {
+//                    parentOfA.setLeft(oldLeft);
+//                }
+//                else {
+//                    parentOfA.setRight(oldLeft);
+//                }
+//                oldLeft.setRight(A);
+//            }
+//        }
+//    }
 //               // Node p = A.
 //                Node p = findParent(A.value);
 //                A.left = B.right;
@@ -526,36 +568,38 @@ public class BSTalgorithm {
 //
 //        System.out.println("W drzewie znajudje się: " + tree.findNode(input));
 
-        int minValue = tree.findMinValue();
-        System.out.println("Wartość minimalna drzewa to: " + minValue);
-        int numberMinFindOperations = tree.getNumberMinFindOperations();
-        System.out.println("Ilość operacji szukania min: " + numberMinFindOperations);
+//        int minValue = tree.findMinValue();
+//        System.out.println("Wartość minimalna drzewa to: " + minValue);
+//        int numberMinFindOperations = tree.getNumberMinFindOperations();
+//        System.out.println("Ilość operacji szukania min: " + numberMinFindOperations);
+//
+//        int maxValue = tree.findMaxValue();
+//        System.out.println("\nWartość maksymalna drzewa to: " + maxValue);
+//        int numberMaxFindOperations = tree.getNumberMaxFindOperations();
+//        System.out.println("Ilość operacji szukania max: " + numberMaxFindOperations + "\n");
+//
+//        int numberOfElements = tree.inorder();
+//        System.out.println("\nIlość elementów drzewa: " + numberOfElements);
 
-        int maxValue = tree.findMaxValue();
-        System.out.println("\nWartość maksymalna drzewa to: " + maxValue);
-        int numberMaxFindOperations = tree.getNumberMaxFindOperations();
-        System.out.println("Ilość operacji szukania max: " + numberMaxFindOperations + "\n");
-
-        int numberOfElements = tree.inorder();
-        System.out.println("\nIlość elementów drzewa: " + numberOfElements);
-
-        System.out.println("\n\n\n");
+        //System.out.println("\n\n\n");
         //tree.printTree();
-        tree.inorder();
+        //tree.inorder();
 
 //        System.out.println("\n\n\n");
 //        tree.deleteNodes(tab);
 //
 //        System.out.println("\n\n\n");
 //        tree.printTree();
+        tree.inorder();
+        tree.printTree();
 
-
-        System.out.println("Rotacja względem węzła: " + tab.get(8) + "\n\n\n\n");
-        tree.rotateRight(tab.get(8));
+        System.out.println("\n\n\n\n\nRotacja względem węzła: " + tab.get(8) + "\n\n\n\n");
+        tree.rotateR(tab.get(8));
 //
         System.out.println("\n\n\n");
         //tree.printTree();
         tree.inorder();
+        tree.printTree();
 
 //        System.out.println("rodzic "+ tab.get(5) + " to:" + tree.findParent(tab.get(5)).value);
 //        System.out.println("rodzic "+ tab.get(10) + " to:" + tree.findParent(tab.get(10)).value);
