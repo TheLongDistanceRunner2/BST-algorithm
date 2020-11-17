@@ -353,6 +353,108 @@ public class BSTalgorithm {
         }
     }
 
+    private Node findNodeToRotate(Node n,int value) {
+        // gdy nie ma wartości, zwracamy wierzchołek z wartością -1:
+        if (n == null) {
+            return new Node(-1);
+        }
+
+        // gdy znaleziono nasz wierzchołek, zwracamy go:
+        if (value == n.getValue()) {
+            return n;
+        }
+
+        // jeśli szukana wartość jest mniejsza, przechodzimy do lewej gałęzi:
+        if (value < n.getValue()) {
+            return findNodeToRotate(n.left, value);
+        }
+        else {
+            return findNodeToRotate(n.right, value);
+        }
+    }
+
+    private Node findParentRec(Node n, int value, int parent) {
+        // gdy nie ma wartości, zwracamy wierzchołek z wartością -1:
+        if (n == null) {
+            return new Node(-1);
+        }
+
+        // gdy znaleziono nasz wierzchołek, zwracamy go:
+        if (value == n.getValue()) {
+            return new Node(parent);
+        }
+        else {
+            if (value < n.getValue()) {
+                return findParentRec(n.left, value, n.value);
+            }
+            else {
+                return findParentRec(n.right, value, n.value);
+            }
+        }
+    }
+
+    public Node findParent(int value) {
+        return findParentRec(node, value, -1);
+    }
+
+    public void rotateRight(int value) {
+        Node A = findNodeToRotate(node, value);
+
+        // jeśli żądany węzeł znajduje się w drzewie:
+        if (A.value != -1) {
+            Node oldLeft = A.left;
+
+            // jeśli B jest null, to kończymy:
+            if (oldLeft != null) {
+                A.setLeft(oldLeft.getRight());
+                Node parentOfA = findParent(A.value);
+
+                if (parentOfA == null) {
+                    node = oldLeft;
+                }
+                else if (parentOfA.getLeft() == A) {
+                    parentOfA.setLeft(oldLeft);
+                }
+                else {
+                    parentOfA.setRight(oldLeft);
+                }
+                oldLeft.setRight(A);
+            }
+        }
+    }
+//               // Node p = A.
+//                Node p = findParent(A.value);
+//                A.left = B.right;
+//
+//                // jesli lewy syn istnieje:
+//                if (A != null) {
+//                    Node tmp_K_05 = findParent(A.left.value);
+//                }
+//
+//                B.right = A;
+//
+//                Node parentB = findParent(B.value);
+//                B = p;
+//
+//                Node parentA = findParent(A.value);
+//                parentA = B;
+//
+//                // sprwawdzamy, czy węzeł A był korzeniem:
+//                if (p == null) {
+//                    if(p.left == A ) {
+//                        p.left = B;
+//                    }
+//                    else {
+//                        p.right = B;
+//                    }
+//                }
+//                else {
+//                    node = B;
+//                }
+//           }
+//        }
+//    }
+
     //==================================================================================================================
     private File readFile(String file_name) throws IOException {
         FileInputStream inputStream = null;
@@ -438,14 +540,26 @@ public class BSTalgorithm {
         System.out.println("\nIlość elementów drzewa: " + numberOfElements);
 
         System.out.println("\n\n\n");
-        tree.printTree();
+        //tree.printTree();
+        tree.inorder();
 
+//        System.out.println("\n\n\n");
+//        tree.deleteNodes(tab);
+//
+//        System.out.println("\n\n\n");
+//        tree.printTree();
+
+
+        System.out.println("Rotacja względem węzła: " + tab.get(8) + "\n\n\n\n");
+        tree.rotateRight(tab.get(8));
+//
         System.out.println("\n\n\n");
-        tree.deleteNodes(tab);
+        //tree.printTree();
+        tree.inorder();
 
-        System.out.println("\n\n\n");
-        tree.printTree();
-
-
+//        System.out.println("rodzic "+ tab.get(5) + " to:" + tree.findParent(tab.get(5)).value);
+//        System.out.println("rodzic "+ tab.get(10) + " to:" + tree.findParent(tab.get(10)).value);
+//        System.out.println("rodzic "+ tab.get(4) + " to:" + tree.findParent(tab.get(4)).value);
+//        System.out.println("rodzic "+ tab.get(1) + " to:" + tree.findParent(tab.get(1)).value);
     }
 }
