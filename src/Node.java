@@ -3,12 +3,15 @@ public class Node {
     int value;
     Node left;
     Node right;
+    Node parent;
 
     Node(int value) {
         this.value = value;
         right = null;
         left = null;
+        parent = null;
     }
+
 
     public int getValue() {
         return value;
@@ -32,6 +35,14 @@ public class Node {
 
     public void setRight(Node right) {
         this.right = right;
+    }
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
     }
 }
 

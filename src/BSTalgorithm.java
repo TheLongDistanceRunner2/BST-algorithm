@@ -72,27 +72,35 @@ public class BSTalgorithm {
     }
 
     // https://www.geeksforgeeks.org/binary-search-tree-set-1-search-and-insertion/
-    public Node insertRec(Node n, int value) {
+    // https://www.tutorialspoint.com/binary-search-tree-insert-with-parent-pointer-in-cplusplus
+    public Node insertRec(Node node, int value) {
         // jeśli nasz obecny wierzchołek jest pusty (jest liściem lub korzeniem), tworzymy nowy wierzchołek,
         // wpisując w niego naszą wartość:
-        if (n == null) {
-            n = new Node(value);
-            return n;
+        if (node == null) {
+            return new Node(value);
         }
 
         // jeśli wstawiana wartość jest mniejsza, idziemy w lewą gałąż:
-        if (value < n.getValue()) {
+        if (value < node.getValue()) {
             // i wywołujemy rekurencyjnie naszą funkcje ze "wskaźnikiem" ustawionym na lewą gałąź:
-            n.left = insertRec(n.left, value);
+            Node lchild = insertRec(node.left, value);
+            node.left = lchild;
+
+            // ustawiamy rodzica:
+            lchild.parent = node;
         }
         // jeśli wstawiana wartość jest równa lub większa, idziemy w prawo:
-        else if (value >= n.getValue()) {
+        else if (value > node.getValue()) {
             // i wywołujemy rekurencyjnie naszą funkcje ze "wskaźnikiem" ustawionym na prawą gałąź:
-            n.right = insertRec(n.right, value);
+            Node rchild = insertRec(node.right, value);
+            node.right = rchild;
+
+            // ustawiamy rodzica:
+            rchild.parent = node;
         }
 
         // i zwracamy "wskaznik" na nasz obecny wierzchołek:
-        return n;
+        return node;
     }
 
     // This method mainly calls InorderRec()
@@ -104,11 +112,15 @@ public class BSTalgorithm {
     public int inorderRec(Node root) {
         if (root != null) {
             this.numberOfElements++;
+
             inorderRec(root.left);
-            System.out.print(root.getValue() + " ");
+            System.out.print("Wezeł: : "+ root.value + " , ");
+            if (root.parent == null)
+                System.out.println("Rodzic : NULL");
+            else
+                System.out.println("Rodzic : " + root.parent.value);
             inorderRec(root.right);
         }
-
         return numberOfElements;
     }
 
@@ -397,105 +409,71 @@ public class BSTalgorithm {
         return findParentRec(node, value, -1);
     }
 
-    // https://eduinf.waw.pl/inf/alg/001_search/0116.php
     // https://cs.lmu.edu/~ray/notes/binarysearchtrees/
+    // https://eduinf.waw.pl/inf/alg/001_search/0116.php
     public void rotateR(int value) {
-        // znajdujemy węzeł z oczedkiwaną wartością:
+        // znajdujemy węzeł z oczekiwaną wartością:
         Node A = findNodeToRotate(node, value);
-        // znajdujemy rodzica węzła A:
-        Node parentA = findParent(A.value);
+        // A.getParent() zamiast p
+        Node p = A.getParent();
 
-        // jesli A nie ma lewego syna, to przerywamy, bo nie można dokonać rotacji:
-        if (A.left == null) {
-            System.out.println("nie można wykonać rotacji!");
+        // jesli nasz węzeł nie ma lewego potomka, to przerywamy,
+        // bo w takim wypadku nie można wykonać rotacji:
+        if (p == null) {
             return;
         }
 
-        // B to lewe dziecko węzła A:
-        Node B = A.left;
-        // lewym dzieckiem A staje się prawe dziecko B:
-        A.setLeft(B.right); // K04
+        // tworzymy B, czyli odniesienie do starego potomka A:
+        Node B = A.getLeft();
 
-        //K06:
+        // lewym synem A staje się prawy syn B:
+        A.setLeft(B.getRight());
 
-        // K09:
-        // jeśli węzeł A był korzeniem:
-        if (parentA == null) {
-            // to korzeniem staje się B:
+        // sprawdzamy, czy p był korzeniem:
+        if (p == null) {
+            // jeśli tak, to korzeniem jest teraz B:
             node = B;
-            //A = B;
         }
-        // jeśli A było lewym potomkiem swojego rodzica:
-        else if (parentA.left == A) {
-            // to w jego miejsce ląduje B:
-            parentA.setLeft(B);
+        // jesli nie, to:
+        // jeśli A było lewym synem swojego rodzica, to:
+        else if (p.getLeft() == A) {
+            // lewym synem p jest teraz B:
+            p.setLeft(B);
         }
         else {
-            // w przeciwnym razie, w miejsce prawego potomka węzła A ląduje B:
-            parentA.setRight(B);
+            // prawym synem p jest teraz B:
+            p.setRight(B);
         }
-        // prawym dzieckiem B staje się A:
+
+        // prawym synem B jest teraz A:
         B.setRight(A);
     }
 
+    // https://cs.lmu.edu/~ray/notes/binarysearchtrees/
+    // https://eduinf.waw.pl/inf/alg/001_search/0116.php
+    public void rotateL(int value) {
+        // znajdujemy węzeł z oczekiwaną wartością:
+        Node A = findNodeToRotate(node, value);
+        // A.getParent() zamiast p
+        Node p = A.getParent();
 
-//    public void rotateRight(int value) {
-//        Node A = findNodeToRotate(node, value);
-//
-//        // jeśli żądany węzeł znajduje się w drzewie:
-//        if (A.value != -1) {
-//            Node oldLeft = A.left;
-//
-//            // jeśli B jest null, to kończymy:
-//            if (oldLeft != null) {
-//                A.setLeft(oldLeft.getRight());
-//                Node parentOfA = findParent(A.value);
-//
-//                if (parentOfA == null) {
-//                    node = oldLeft;
-//                }
-//                else if (parentOfA.getLeft() == A) {
-//                    parentOfA.setLeft(oldLeft);
-//                }
-//                else {
-//                    parentOfA.setRight(oldLeft);
-//                }
-//                oldLeft.setRight(A);
-//            }
-//        }
-//    }
-//               // Node p = A.
-//                Node p = findParent(A.value);
-//                A.left = B.right;
-//
-//                // jesli lewy syn istnieje:
-//                if (A != null) {
-//                    Node tmp_K_05 = findParent(A.left.value);
-//                }
-//
-//                B.right = A;
-//
-//                Node parentB = findParent(B.value);
-//                B = p;
-//
-//                Node parentA = findParent(A.value);
-//                parentA = B;
-//
-//                // sprwawdzamy, czy węzeł A był korzeniem:
-//                if (p == null) {
-//                    if(p.left == A ) {
-//                        p.left = B;
-//                    }
-//                    else {
-//                        p.right = B;
-//                    }
-//                }
-//                else {
-//                    node = B;
-//                }
-//           }
-//        }
-//    }
+        BinaryTreeNode<E> oldRight = n.getRight();
+
+        // tworzymy B, czyli odniesienie do starego potomka A:
+        Node B = A.getLeft();
+
+        n.setRight(oldRight.getLeft());
+        if (n.getParent() == null) {
+            root = oldRight;
+        } else if (n.getParent().getLeft() == n) {
+            n.getParent().setLeft(oldRight);
+        } else {
+            n.getParent().setRight(oldRight);
+        }
+        oldRight.setLeft(n);
+
+    }
+
 
     //==================================================================================================================
     private File readFile(String file_name) throws IOException {
@@ -593,11 +571,11 @@ public class BSTalgorithm {
         tree.inorder();
         tree.printTree();
 
-        System.out.println("\n\n\n\n\nRotacja względem węzła: " + tab.get(8) + "\n\n\n\n");
-        tree.rotateR(tab.get(8));
+        System.out.println("\n\n\n\n\nRotacja względem węzła: " + tab.get(5) + "\n\n\n\n");
+        tree.rotateR(tab.get(5));
 //
-        System.out.println("\n\n\n");
-        //tree.printTree();
+//        System.out.println("\n\n\n");
+//        //tree.printTree();
         tree.inorder();
         tree.printTree();
 
