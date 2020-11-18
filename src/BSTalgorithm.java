@@ -114,11 +114,11 @@ public class BSTalgorithm {
             this.numberOfElements++;
 
             inorderRec(root.left);
-            System.out.print("Wezeł: : "+ root.value + " , ");
-            if (root.parent == null)
-                System.out.println("Rodzic : NULL");
-            else
-                System.out.println("Rodzic : " + root.parent.value);
+            System.out.print(/*"Wezeł: : "+ */root.value + " "/* + " , "*/);
+//            if (root.parent == null)
+//                System.out.println("Rodzic : NULL");
+//            else
+//                System.out.println("Rodzic : " + root.parent.value);
             inorderRec(root.right);
         }
         return numberOfElements;
@@ -127,15 +127,15 @@ public class BSTalgorithm {
     //https://www.educative.io/edpresso/finding-the-maximum-depth-of-a-binary-tree
     // Dzięki rekurencyjnemu wywołaniu, funkcja na każdym poziomie porówna ilość (potencjalnych) potomków rodzica
     // w lewej i prawę gałęzi, idąc od korzenia w dół:
-    public int findDepthPreOrderRec(Node root) {
+    public int findHeigthPreOrderRec(Node root) {
         // jeśli korzeń jest pusty, to drzewo ma zerową wysokość:
         if(root == null) {
             return 0;
         }
 
         // rekurencyjnie wywołujemy funkcję, przechodząc najpierw w lewą gałąź, a potem w prawą:
-        int leftDepth = findDepthPreOrderRec(root.left);
-        int rightDepth = findDepthPreOrderRec(root.right);
+        int leftDepth = findHeigthPreOrderRec(root.left);
+        int rightDepth = findHeigthPreOrderRec(root.right);
 
         // Porównujemy, przejściem której gałęzi napotkamy więcej potomków.
         // Wysokością drzewa będzie ta wartość powiększona o 1 - dodajemy do wyniku poziom korzenia:
@@ -145,8 +145,8 @@ public class BSTalgorithm {
             return (1 + rightDepth);
     }
 
-    public int findDepthPreOrder() {
-        return findDepthPreOrderRec(node);
+    public int findHeigthPreOrder() {
+        return findHeigthPreOrderRec(node);
     }
 
     public ArrayList drawNumbers(int numberForGenerator, int min, int max) {
@@ -420,7 +420,7 @@ public class BSTalgorithm {
         // jesli nasz węzeł A nie ma lewego potomka, to przerywamy,
         // bo w takim wypadku nie można wykonać rotacji:
         if (B == null) {
-            System.out.println("Rotacja nie mogła zostać wykonana - brak lewego potomka!");
+            System.out.println("The rotation couldn't be done - there's no left child!");
             return;
         }
 
@@ -461,7 +461,7 @@ public class BSTalgorithm {
         // jesli nasz węzeł A nie ma prawego potomka, to przerywamy,
         // bo w takim wypadku nie można wykonać rotacji:
         if (B == null) {
-            System.out.println("Rotacja nie mogła zostać wykonana - brak prawego potomka!");
+            System.out.println("The rotation couldn't be done - there's no right child!");
             return;
         }
 
@@ -546,59 +546,81 @@ public class BSTalgorithm {
 
         // dodajemy wylosowane wartości do drzewa:
         for (int i = 0; i < elementsToAdd; i++) {
-            System.out.println(tab.get(i));
+            //System.out.println(tab.get(i));
             tree.insert(tab.get(i));
         }
 
-        //int elementsNumber = tree.inorder();
-        //System.out.println("Number of elements in tree: " + elementsNumber);
+        System.out.println("Tree's elemeents:");
+        int elementsNumber = tree.inorder();
+        System.out.println("\nNumber of elements in tree: " + elementsNumber);
+        int height = tree.findHeigthPreOrder();
+        System.out.println("Height of tree: " + height);
 
-        int depth = tree.findDepthPreOrder();
-        System.out.println("\nHeight of tree: " + depth);
-
-//        System.out.println("Podaj wartość węzła, która chcesz znaleźć: \n" );
-//        int input = 0;
-//        Scanner scanner = new Scanner(System.in);
-//        input = scanner.nextInt();
-//
-//        System.out.println("W drzewie znajudje się: " + tree.findNode(input));
-
-//        int minValue = tree.findMinValue();
-//        System.out.println("Wartość minimalna drzewa to: " + minValue);
-//        int numberMinFindOperations = tree.getNumberMinFindOperations();
-//        System.out.println("Ilość operacji szukania min: " + numberMinFindOperations);
-//
-//        int maxValue = tree.findMaxValue();
-//        System.out.println("\nWartość maksymalna drzewa to: " + maxValue);
-//        int numberMaxFindOperations = tree.getNumberMaxFindOperations();
-//        System.out.println("Ilość operacji szukania max: " + numberMaxFindOperations + "\n");
-//
-//        int numberOfElements = tree.inorder();
-//        System.out.println("\nIlość elementów drzewa: " + numberOfElements);
-
-        //System.out.println("\n\n\n");
-        //tree.printTree();
-        //tree.inorder();
-
-//        System.out.println("\n\n\n");
-//        tree.deleteNodes(tab);
-//
-//        System.out.println("\n\n\n");
-//        tree.printTree();
-        tree.inorder();
+        System.out.println("\n\nTree at the beginning:");
+        System.out.println("\n\n\n");
         tree.printTree();
+        System.out.println("\n\n\n");
 
-        System.out.println("\n\n\n\n\nRotacja względem węzła: " + tab.get(5) + "\n\n\n\n");
-        tree.rotateL(tab.get(5));
-//
-//        System.out.println("\n\n\n");
-//        //tree.printTree();
-        tree.inorder();
+        int minValue = tree.findMinValue();
+        System.out.print("Min value: " + minValue);
+        int numberMinFindOperations = tree.getNumberMinFindOperations();
+        System.out.print("   Number of operations: " + numberMinFindOperations);
+
+        int maxValue = tree.findMaxValue();
+        System.out.print("\nMax value: " + maxValue);
+        int numberMaxFindOperations = tree.getNumberMaxFindOperations();
+        System.out.print("   Number of operations: " + numberMaxFindOperations + "\n");
+
+        int elementsToDelete = tree.getFile().getNumberOfElementsToDelte();
+
+        // usuwamy wybraną ilość elementów z drzewa:
+        for (int i = 0; i < elementsToDelete; i++) {
+            //System.out.println(tab.get(i));
+            tree.deleteNode(tab.get(i));
+        }
+
+        System.out.println("\n\nTree after deleting " + elementsToDelete + " elements:");
+        System.out.println("\n\n\n");
         tree.printTree();
+        System.out.println("\n\n\n");
 
-//        System.out.println("rodzic "+ tab.get(5) + " to:" + tree.findParent(tab.get(5)).value);
-//        System.out.println("rodzic "+ tab.get(10) + " to:" + tree.findParent(tab.get(10)).value);
-//        System.out.println("rodzic "+ tab.get(4) + " to:" + tree.findParent(tab.get(4)).value);
-//        System.out.println("rodzic "+ tab.get(1) + " to:" + tree.findParent(tab.get(1)).value);
+        char letter1 = tree.getFile().getRotation1();
+        int node1 = tree.getFile().getNodeToRotate1();
+
+        if(letter1 == 'R') {
+            tree.rotateR(node1);
+        }
+        else if (letter1 == 'L') {
+            tree.rotateL(node1);
+        }
+        else {
+            System.out.println("INAPPROPRIATE LETTER !!!");
+        }
+
+        System.out.println("\n\nTree after first rotation:");
+        System.out.println("\n\n\n");
+        tree.printTree();
+        System.out.println("\n\n\n");
+
+        char letter2 = tree.getFile().getRotation2();
+        int node2 = tree.getFile().getNodeToRotate2();
+
+        if(letter2 == 'R') {
+            tree.rotateR(node2);
+        }
+        else if (letter2 == 'L') {
+            tree.rotateL(node2);
+        }
+        else {
+            System.out.println("INAPPROPRIATE LETTER !!!");
+        }
+
+        System.out.println("\n\nTree after second rotation:");
+        System.out.println("\n\n\n");
+        tree.printTree();
+        System.out.println("\n\n\n");
+
+        int finalHeight = tree.findHeigthPreOrder();
+        System.out.println("Final height of tree: " + finalHeight);
     }
 }
