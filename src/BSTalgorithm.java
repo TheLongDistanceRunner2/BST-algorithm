@@ -414,17 +414,18 @@ public class BSTalgorithm {
     public void rotateR(int value) {
         // znajdujemy węzeł z oczekiwaną wartością:
         Node A = findNodeToRotate(node, value);
-        // A.getParent() zamiast p
-        Node p = A.getParent();
+        // tworzymy B, czyli odniesienie do starego potomka A:
+        Node B = A.getLeft();
 
-        // jesli nasz węzeł nie ma lewego potomka, to przerywamy,
+        // jesli nasz węzeł A nie ma lewego potomka, to przerywamy,
         // bo w takim wypadku nie można wykonać rotacji:
-        if (p == null) {
+        if (B == null) {
+            System.out.println("Rotacja nie mogła zostać wykonana - brak lewego potomka!");
             return;
         }
 
-        // tworzymy B, czyli odniesienie do starego potomka A:
-        Node B = A.getLeft();
+        // wskazanie ojca A:
+        Node p = A.getParent();
 
         // lewym synem A staje się prawy syn B:
         A.setLeft(B.getRight());
@@ -454,24 +455,40 @@ public class BSTalgorithm {
     public void rotateL(int value) {
         // znajdujemy węzeł z oczekiwaną wartością:
         Node A = findNodeToRotate(node, value);
-        // A.getParent() zamiast p
+        // tworzymy B, czyli odniesienie do starego potomka A:
+        Node B = A.getRight();
+
+        // jesli nasz węzeł A nie ma prawego potomka, to przerywamy,
+        // bo w takim wypadku nie można wykonać rotacji:
+        if (B == null) {
+            System.out.println("Rotacja nie mogła zostać wykonana - brak prawego potomka!");
+            return;
+        }
+
+        // wskazanie ojca A:
         Node p = A.getParent();
 
-        BinaryTreeNode<E> oldRight = n.getRight();
+        // prawym synem A staje się lewy syn B:
+        A.setRight(B.getLeft());
 
-        // tworzymy B, czyli odniesienie do starego potomka A:
-        Node B = A.getLeft();
-
-        n.setRight(oldRight.getLeft());
-        if (n.getParent() == null) {
-            root = oldRight;
-        } else if (n.getParent().getLeft() == n) {
-            n.getParent().setLeft(oldRight);
-        } else {
-            n.getParent().setRight(oldRight);
+        // sprawdzamy, czy p był korzeniem:
+        if (p == null) {
+            // jeśli tak, to korzeniem jest teraz B:
+            node = B;
         }
-        oldRight.setLeft(n);
+        // jesli nie, to:
+        // jeśli A było lewym synem swojego rodzica, to:
+        else if (p.getLeft() == A) {
+            // lewym synem p jest teraz B:
+            p.setLeft(B);
+        }
+        else {
+            // prawym synem p jest teraz B:
+            p.setRight(B);
+        }
 
+        // lewym synem B jest teraz A:
+        B.setLeft(A);
     }
 
 
@@ -572,7 +589,7 @@ public class BSTalgorithm {
         tree.printTree();
 
         System.out.println("\n\n\n\n\nRotacja względem węzła: " + tab.get(5) + "\n\n\n\n");
-        tree.rotateR(tab.get(5));
+        tree.rotateL(tab.get(5));
 //
 //        System.out.println("\n\n\n");
 //        //tree.printTree();
